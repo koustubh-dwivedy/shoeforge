@@ -1,0 +1,42 @@
+{
+  "design": {
+    "slug": "derby-plain-uk9",
+    "name": "Plain Derby Shakedown",
+    "created": "2026-07-04",
+    "revision": 1,
+    "brief": "Pipeline shakedown design #1: a plain derby (no cap, no brogueing, no apron), Goodyear-welted, UK 9 F, round toe, 25 mm formal heel. Purpose: exercise and harden every pipeline stage and tool with the simplest upper topology before richer designs."
+  },
+  "size": {
+    "system": "uk_men",
+    "uk_size": { "value": 9, "source": "user", "assumed": false },
+    "width_fitting": { "value": "F", "source": "user", "assumed": false }
+  },
+  "shoe": {
+    "type": { "value": "derby", "source": "user", "assumed": false },
+    "style_template": { "value": "derby_plain", "source": "user", "assumed": false },
+    "construction": { "value": "gyw", "source": "default", "assumed": true },
+    "toe_character": { "value": "round", "source": "user", "assumed": false },
+    "toe_elongation": { "value": "standard", "source": "user", "assumed": false },
+    "detailing": {
+      "cap": { "value": false, "source": "user", "assumed": false },
+      "brogue_scheme": { "value": null, "source": "user", "assumed": false },
+      "apron": { "value": false, "source": "user", "assumed": false }
+    }
+  },
+  "materials": {
+    "upper": { "value": "calf", "source": "default", "assumed": true },
+    "upper_thickness_mm": { "value": 1.6, "source": "default", "assumed": true },
+    "color": { "value": "black", "source": "default", "assumed": true },
+    "lining": { "value": "natural veg-tan calf lining", "source": "default", "assumed": true },
+    "edge_treatment": { "value": "dark burnished edge, natural welt", "source": "default", "assumed": true }
+  },
+  "heel": {
+    "height_mm": { "value": 25, "source": "user", "assumed": false },
+    "kind": { "value": "stacked_leather", "source": "default", "assumed": true }
+  },
+  "sole": {
+    "spec": { "value": "single_leather", "source": "default", "assumed": true },
+    "thickness_mm": { "value": 5, "source": "default", "assumed": true }
+  },
+  "inspiration_images": []
+}
