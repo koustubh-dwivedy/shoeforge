@@ -95,7 +95,8 @@ def bottom_profile(mesh, n=240) -> np.ndarray:
         pts = _section_points(mesh, (x, 0, 0), (1, 0, 0))
         if pts is None:
             continue
-        near = pts[np.abs(pts[:, 1]) < np.ptp(pts[:, 1]) * 0.5 + 1e-9]
+        med = np.median(pts[:, 1])
+        near = pts[np.abs(pts[:, 1] - med) <= np.ptp(pts[:, 1]) * 0.5 + 1e-9]
         out.append((x, float(near[:, 2].min())))
     return np.asarray(out)
 
