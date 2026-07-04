@@ -65,7 +65,22 @@
 - Fit-critical after LSQ (v16): ball 245.1 ✓, waist 241.5 ✓, instep 256.7 ✓,
   tread 98.8 ✓, seat 63.0 ✓, heel 24.2 ✓, spring 10.0 ✓, toe-box 24.6 ✓,
   short-heel 329.0 (estimate 325, Δ+4 — calibration item).
-- **GATE 2a (round 4): awaiting human review** — template_view.blend,
+- Round 5 (v17), user feedback: (1) pointed nose/heel tips — root cause: fan
+  closure to a tip vertex over near-linear outline tails; fixed with
+  circular-arc closure points + cosine section spacing (DECISIONS.md #11).
+  (2) side-profile distortion / "fit the entire part" — whole-profile LSQ
+  attempted (two-region masks, per-region fitted datum offsets, single
+  cone-scale DOF, smoothness regularizer): the toe/vamp fit converged and is
+  KEPT (RMS 7.1→3.2 mm); the cone/lace region proved UNIDENTIFIABLE (cone
+  height collinear with tongue/lace stack; both ran to bounds) and dragged
+  fit-critical instep + short-heel girths out — cone reverted to
+  girth-constrained values, decision recorded (DECISIONS.md #10). Frozen
+  crown anchor at 0.67 added so toe-box styling can't leak into the ball
+  girth zone.
+- Fit-critical (v17): ball 244.2 ✓, waist 241.8 ✓, instep 256.7 ✓, short-heel
+  329.0 (est. 325), tread 98.5 ✓, seat 63.0 ✓, heel 24.2 ✓, spring 10.0 ✓,
+  toe-box 24.6 ✓. Watertight ✓.
+- **GATE 2a (round 5): awaiting human review** — template_view.blend,
   mock/mock_view.blend, snapshots/, reference/overlay.png, LSQ_REPORT.md,
   TEMPLATE_REPORT.md.
 

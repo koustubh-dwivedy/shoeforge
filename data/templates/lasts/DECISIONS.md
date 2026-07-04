@@ -104,6 +104,22 @@ fit_targets.json) · **L2** = template shape control (shape_params.json) ·
 9. **Gate artifacts** for every template revision: snapshots (5 views +
    section plates), `reference/overlay.png`, `template_view.blend`,
    `mock/` (upper+sole+heel preview + `mock_view.blend`), TEMPLATE_REPORT.md.
+10. **The cone/back region is not silhouette-fitted** (2026-07-04, attempted
+    twice at user request — per-point and single-scale-DOF with a separate
+    lace-region datum offset): the problem is unidentifiable (cone height and
+    tongue/lace stack are collinear — both variables ran to their bounds
+    together), and the lowered cone pulled fit-critical instep (253.8 vs
+    256.9±2) and short-heel (297 vs ~325) girths out of tolerance. The cone
+    is constrained by girths and judged visually in 3D. Only the toe/vamp
+    silhouette segment (0.60–0.90 of shoe length), where the shoe surface is
+    a near-constant offset of the last, is fitted — with the datum offset as
+    a bounded nuisance variable (physical floor 8 mm).
+11. **Rounded end caps**: lasts must never close to a point. Outline curves
+    carry circular-arc closure points (0.005 / 0.995, from heel ~15 mm and
+    nose ~10 mm cap radii), sections are cosine-spaced (dense at the ends),
+    and cap points are never LSQ-free. A frozen crown anchor at x=0.67 pins
+    the post-ball crown so style-zone toe-box changes cannot leak into the
+    joint-tape (ball girth) measurement zone.
 
 ## 3. Open calibration items (physical trial resolves; do NOT silently change)
 

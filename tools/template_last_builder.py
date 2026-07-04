@@ -55,7 +55,11 @@ def build_mesh(p: dict) -> tuple[trimesh.Trimesh, dict]:
     eps = m["end_clearance_mm"] / L
     camber = p["bottom_camber_mm"]
 
-    fracs = np.linspace(eps, 1.0 - eps, nsec)
+    # cosine spacing: sections cluster at both ends so the rounded nose/heel
+    # caps (arc-closure points in the outline curves) loft smoothly instead
+    # of fanning to a cone
+    t = np.linspace(0.0, 1.0, nsec)
+    fracs = eps + (1.0 - 2 * eps) * (1.0 - np.cos(np.pi * t)) / 2.0
     rings = []
     for f in fracs:
         x = f * L

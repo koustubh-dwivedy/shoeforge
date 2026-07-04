@@ -3,7 +3,7 @@
     "template": "round_25mm",
     "description": "In-house round-toe men's dress last template, RIGHT foot, built natively at 25 mm heel pitch. First entry in the shoeforge template library. All values mm; x-positions are fractions of stick length (heel=0, toe=1). Parameter registry & decisions: data/templates/lasts/DECISIONS.md.",
     "built_at": "UK 9 F dimensions (morph corrections expected to be small)",
-    "revision": "v14 joint-anchored ball line per last_params.md (2026-07-04) + LSQ-fitted style zone",
+    "revision": "v14 joint-anchored ball line per last_params.md (2026-07-04) + LSQ-fitted style zone + rounded end caps + LSQ-fitted style zone + LSQ-fitted style zone + LSQ-fitted style zone",
     "created": "2026-07-04"
   },
   "stick_length_mm": 287.6,
@@ -85,6 +85,10 @@
         0.0
       ],
       [
+        0.005,
+        -5.8
+      ],
+      [
         0.01,
         -8.0
       ],
@@ -130,27 +134,31 @@
       ],
       [
         0.72,
-        -43.0
+        -44.798671489409195
       ],
       [
         0.8,
-        -37.16251986851007
+        -39.884727664656886
       ],
       [
         0.86,
-        -32.23763001602262
+        -33.67169794994013
       ],
       [
         0.9,
-        -28.86012552130413
+        -27.084272354886327
       ],
       [
         0.95,
-        -21.290956886824624
+        -18.39971825633417
       ],
       [
         0.98,
         -13.0
+      ],
+      [
+        0.995,
+        -5.2
       ],
       [
         1.0,
@@ -164,6 +172,10 @@
       [
         0.0,
         0.0
+      ],
+      [
+        0.005,
+        5.8
       ],
       [
         0.01,
@@ -215,23 +227,27 @@
       ],
       [
         0.74,
-        43.5
+        42.357638936521376
       ],
       [
         0.82,
-        35.00347098175518
+        33.71576619022931
       ],
       [
         0.88,
-        29.455647799425364
+        27.302660053499793
       ],
       [
         0.93,
-        23.206874944408835
+        20.82126944857354
       ],
       [
         0.97,
-        14.172189588319227
+        14.2
+      ],
+      [
+        0.995,
+        5.2
       ],
       [
         1.0,
@@ -256,11 +272,11 @@
       ],
       [
         0.75,
-        -0.5644884779821102
+        0.48387643611552755
       ],
       [
         0.9,
-        -1.1309463724652165
+        -0.9002206273233688
       ],
       [
         1.0,
@@ -312,16 +328,20 @@
         45.5
       ],
       [
+        0.67,
+        40.0
+      ],
+      [
         0.72,
-        37.5
+        40.53233645914751
       ],
       [
         0.8,
-        39.11400633655591
+        38.65467941784678
       ],
       [
         0.88,
-        35.5491912348514
+        35.283086984278775
       ],
       [
         0.95,

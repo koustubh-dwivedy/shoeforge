@@ -36,18 +36,36 @@ sys.path.insert(0, str(REPO / "tools"))
 from ref_overlay import side_profile_mm, sole_outline_mm  # noqa: E402
 
 STYLE_X0 = 0.70          # style zone begins here (fraction of stick)
-SIDE_MASK = (0.62, 0.90)  # side-view usable segment (fraction of shoe length)
-SIDE_WEIGHT = 0.4
 OUTSOLE_EXTRA = 12.0
 CROWN_FLOOR_MARGIN = 9.0  # crown must stay this far above the bottom (toe-box floor)
 TIP_CUT = 0.965           # exclude the extreme tip: the sole's blunt front
                           # corner is irreducible against a last that closes
-                          # to a point, and would distort the whole fit
-# The shoe-space -> last-space vertical datum (leather + sole stack + shoe
-# toe spring) is NOT assumed: it is a free nuisance scalar the optimizer
-# estimates, bounded to a physically plausible band.
-SIDE_OFFSET_BOUNDS = (4.0, 20.0)
-SIDE_OFFSET_INIT = 9.0
+                          # to a rounded cap, and would distort the whole fit
+
+# WHOLE-PROFILE side-view fit, two regions with independent fitted datum
+# offsets (shoe-space -> last-space). Separating the offsets is what makes
+# fitting the lace region safe: "the shoe is thicker there (tongue+laces)"
+# becomes a nuisance scalar instead of contaminating the last's shape.
+#   toe/vamp region: leather + sole stack
+#   cone/lace region: leather + sole + tongue/lace/facing stack
+SIDE_REGIONS = [
+    # toe offset floor 8: leather (~2) + minimum sole stack (~6) — an offset
+    # below that is physically impossible and just inflates the toe box
+    {"name": "toe/vamp", "mask": (0.60, 0.90), "weight": 0.5,
+     "off_bounds": (8.0, 26.0), "off_init": 14.0},
+]
+# DECISION (DECISIONS.md #10): the cone/back region is NOT fitted to the
+# side silhouette. Attempted 2026-07-04 (per-point, then single cone-scale
+# DOF + separate lace-region offset): the problem is UNIDENTIFIABLE — cone
+# height and tongue/lace stack thickness are collinear in the residual, so
+# the optimizer drives both to their bounds; and lowering the cone pulled
+# fit-critical instep (253.8 vs 256.9±2) and short-heel (297 vs ~325) girths
+# out of tolerance. The cone is therefore constrained by GIRTHS (fit) and
+# reviewed visually in 3D at gates; only the toe/vamp silhouette segment,
+# where the shoe surface is a constant-thickness offset of the last, is fit.
+CONE_SCALE_POINTS = frozenset()
+CONE_SCALE_BOUNDS = (1.0, 1.0)
+SMOOTH_LAMBDA = 0.08   # second-difference regularizer on free curve points
 
 
 def spline(pts):
@@ -64,17 +82,24 @@ class StyleFit:
         for key in ("outline_y_medial", "outline_y_lateral",
                     "top_profile_z", "centerline_shift_y"):
             for i, (x, _) in enumerate(self.p[key]["points"]):
-                if not (STYLE_X0 <= x < 1.0):
-                    continue
-                # crown points forward of the side-view mask have no residual
-                # support — leave them hand-set (blended after the fit)
-                if key == "top_profile_z" and x > 0.91:
-                    continue
-                self.free.append((key, i))
+                # arc-closure cap points (beyond TIP_CUT) are geometry, never
+                # free — they have no residual support and would wander
+                in_style = STYLE_X0 <= x <= TIP_CUT
+                if key == "top_profile_z":
+                    if in_style and x <= 0.91:
+                        self.free.append((key, i))
+                elif in_style:
+                    self.free.append((key, i))
+        self.cone_idx = [i for i, (x, _) in
+                         enumerate(self.p["top_profile_z"]["points"])
+                         if round(x, 3) in CONE_SCALE_POINTS]
+        self.cone_base = [self.p["top_profile_z"]["points"][i][1]
+                          for i in self.cone_idx]
 
     def x0(self):
         v = [self.p[k]["points"][i][1] for k, i in self.free]
-        return np.array(v + [SIDE_OFFSET_INIT])   # last var = side datum offset
+        cone = [1.0] if self.cone_idx else []
+        return np.array(v + cone + [r["off_init"] for r in SIDE_REGIONS])
 
     def bounds(self, x0):
         lo, hi = x0 - 12.0, x0 + 12.0
@@ -86,12 +111,33 @@ class StyleFit:
                     lo[j] = max(lo[j], float(zb(xf)) + CROWN_FLOOR_MARGIN)
             elif k == "centerline_shift_y":
                 lo[j], hi[j] = -8.0, 1.5   # inflare-only (anatomical)
-        lo[-1], hi[-1] = SIDE_OFFSET_BOUNDS
+        if self.cone_idx:
+            n_extra = 1 + len(SIDE_REGIONS)
+            lo[-n_extra], hi[-n_extra] = CONE_SCALE_BOUNDS
+        for r_i, reg in enumerate(SIDE_REGIONS):
+            lo[-len(SIDE_REGIONS) + r_i], hi[-len(SIDE_REGIONS) + r_i] = \
+                reg["off_bounds"]
         return lo, hi
 
     def apply(self, v):
-        for (k, i), val in zip(self.free, v):
+        n_extra = (1 if self.cone_idx else 0) + len(SIDE_REGIONS)
+        for (k, i), val in zip(self.free, v[:-n_extra]):
             self.p[k]["points"][i][1] = float(val)
+        if self.cone_idx:
+            cone_scale = float(v[-(1 + len(SIDE_REGIONS))])
+            for i, base in zip(self.cone_idx, self.cone_base):
+                self.p["top_profile_z"]["points"][i][1] = base * cone_scale
+
+    def smoothness(self):
+        """Divided second differences over free-region points (wiggle penalty)."""
+        out = []
+        for key in ("outline_y_medial", "outline_y_lateral", "top_profile_z"):
+            pts = [q for q in self.p[key]["points"] if 0.60 <= q[0] <= 0.99]
+            for i in range(1, len(pts) - 1):
+                s1 = (pts[i][1] - pts[i - 1][1]) / (pts[i][0] - pts[i - 1][0])
+                s2 = (pts[i + 1][1] - pts[i][1]) / (pts[i + 1][0] - pts[i][0])
+                out.append(SMOOTH_LAMBDA * (s2 - s1))
+        return out
 
     def curves(self):
         ym = spline(self.p["outline_y_medial"]["points"])
@@ -109,8 +155,8 @@ class StyleFit:
 
 
 def residuals(v, fit, ref_xy_style, ref_side, tmpl_style_f):
-    side_offset = v[-1]
-    fit.apply(v[:-1])
+    side_offsets = v[-len(SIDE_REGIONS):]
+    fit.apply(v)
     poly = fit.outline_poly()
     ext = poly.exterior
     # ref -> template distances (style-zone ref samples)
@@ -127,12 +173,14 @@ def residuals(v, fit, ref_xy_style, ref_side, tmpl_style_f):
     if ref_side is not None:
         xs, tops = ref_side
         shoe_len = fit.L + OUTSOLE_EXTRA
-        m = (xs >= SIDE_MASK[0] * shoe_len) & (xs <= SIDE_MASK[1] * shoe_len)
-        xt = np.clip(xs[m] * fit.L / shoe_len, 0, fit.L)
-        want = tops[m] - side_offset
-        got = zt(xt / fit.L)
-        r3 = (SIDE_WEIGHT * (got - want)).tolist()
-    return np.array(r1 + r2 + r3)
+        for reg, off in zip(SIDE_REGIONS, side_offsets):
+            m = (xs >= reg["mask"][0] * shoe_len) & \
+                (xs <= reg["mask"][1] * shoe_len)
+            xt = np.clip(xs[m] * fit.L / shoe_len, 0, fit.L)
+            want = tops[m] - off
+            got = zt(xt / fit.L)
+            r3 += (reg["weight"] * (got - want)).tolist()
+    return np.array(r1 + r2 + r3 + fit.smoothness())
 
 
 if __name__ == "__main__":
@@ -159,7 +207,8 @@ if __name__ == "__main__":
                         f_scale=2.0, diff_step=0.4,
                         args=(fit, ref_xy_style, ref_side, tmpl_style_f))
     r1 = residuals(res.x, fit, ref_xy_style, ref_side, tmpl_style_f)
-    fit.apply(res.x[:-1])
+    fit.apply(res.x)
+    cone_scale = res.x[-(1 + len(SIDE_REGIONS))] if fit.cone_idx else 1.0
     params["meta"]["revision"] = params["meta"].get("revision", "") + " + LSQ-fitted style zone"
     (tdir / "shape_params.json").write_text(json.dumps(params, indent=2))
 
@@ -171,9 +220,14 @@ if __name__ == "__main__":
         f"(outlines, crown, swing; x ≥ {STYLE_X0} of stick — fit zone frozen)",
         f"- residual samples: {len(r0)} (top-view both directions"
         f"{' + masked side view' if ref_side is not None else ''})",
-        f"- loss: soft_l1, f_scale 2 mm; side-view weight {SIDE_WEIGHT}, "
-        f"fitted datum offset {res.x[-1]:.1f} mm (bounds {SIDE_OFFSET_BOUNDS}), "
-        f"mask {SIDE_MASK} of shoe length; tip beyond {TIP_CUT} of stick excluded",
+        "- loss: soft_l1, f_scale 2 mm; WHOLE-PROFILE side fit, per-region "
+        "fitted datum offsets: " + ", ".join(
+            f"{reg['name']} {res.x[-len(SIDE_REGIONS) + i]:.1f} mm "
+            f"(mask {reg['mask']}, w {reg['weight']})"
+            for i, reg in enumerate(SIDE_REGIONS)) +
+        f"; tip beyond {TIP_CUT} of stick excluded; instep/waist/ball crowns frozen (fit zone)",
+        f"- cone height scale (single DOF over rear crown): {cone_scale:.3f} "
+        f"(bounds {CONE_SCALE_BOUNDS}); smoothness λ {SMOOTH_LAMBDA}",
         "",
         "| Metric | Before | After |",
         "|---|---|---|",
