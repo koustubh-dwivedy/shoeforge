@@ -34,8 +34,22 @@
      model the 25 mm-pitch effect; measured 347.7 (1.42×ball) is plausible for
      a pitched last. Flagged for physical calibration; NOT chased by loosening
      tolerances (standing rule).
-- **GATE 2a (round 2): awaiting human review** — snapshots + TEMPLATE_REPORT.md
-  + template_view.blend in `data/templates/lasts/round_25mm/`.
+- Round 3 (v13), responding to user Q4-Q6: (Q4) asymmetry strengthened —
+  lateral joint peak moved posterior (0.70) of medial (0.74), toe apex offset
+  medial (y=-4), medial arch cut deeper; left last = mirror of right (standard
+  practice, applied at print/pattern time). (Q5) `data/templates/lasts/METHOD.md`
+  documents the parametrization: classical cross-section lofting + template
+  morphing + SATRA-style validation, parameter vocabulary mapped 1:1 to
+  3DShoemaker's; in-house surface construction only where commercial tools are
+  proprietary; external/purchased templates remain drop-in compatible.
+  (Q6) `tools/ref_overlay.py` extracts reference silhouettes (PCA-aligned,
+  sole-overhang-corrected, mirrored to right frame) and overlays them on
+  template curves → `reference/overlay.png`; toe made fuller/squarer per
+  overlay; gap now mostly within sole-overhang uncertainty. All fit-critical
+  measurements remain IN TOLERANCE (ball 244.1, waist 240.7, instep 257.5,
+  tread 98.5, seat 63.0, heel 24.2, spring 9.5, toe-box 18.0).
+- **GATE 2a (round 3): awaiting human review** — template_view.blend (3D),
+  snapshots/, reference/overlay.png, TEMPLATE_REPORT.md.
 
 ### Stage 1 — Fit targets (2026-07-04) — COMPLETE (no gate)
 - Artifacts: `data/sizing/uk_men.json`, `data/allowances/fit.json` (repo-level configs),
