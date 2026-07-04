@@ -1,0 +1,71 @@
+{
+  "meta": {
+    "template": "round_25mm",
+    "description": "In-house round-toe men's dress last template, RIGHT foot, built natively at 25 mm heel pitch. First entry in the shoeforge template library. All values mm; x-positions are fractions of stick length (heel=0, toe=1).",
+    "built_at": "UK 9 F dimensions (morph corrections expected to be small)",
+    "created": "2026-07-04"
+  },
+  "stick_length_mm": 287.6,
+  "heel_height_mm": 25.0,
+  "toe_spring_mm": 10.0,
+  "bottom_profile_z": {
+    "comment": "z of the feather/bottom along the length; ground plane z=0; tread touches near the ball",
+    "points": [
+      [0.0, 26.0], [0.05, 25.5], [0.09, 25.0], [0.14, 24.2], [0.20, 22.0],
+      [0.30, 15.0], [0.45, 6.5], [0.55, 2.5], [0.65, 0.5], [0.72, 0.0],
+      [0.80, 0.3], [0.88, 2.2], [0.95, 6.0], [1.0, 10.0]
+    ]
+  },
+  "outline_y_medial": {
+    "comment": "medial (negative-Y) feather edge; right last: medial edge relatively straight through the big-toe joint",
+    "points": [
+      [0.0, 0.0], [0.01, -8.0], [0.03, -16.0], [0.07, -24.0], [0.12, -29.0],
+      [0.17, -31.0], [0.28, -31.5], [0.40, -31.5], [0.52, -32.5], [0.62, -35.0],
+      [0.72, -46.5], [0.78, -46.3], [0.84, -42.0], [0.90, -34.5],
+      [0.95, -24.5], [0.98, -14.0], [1.0, 0.0]
+    ]
+  },
+  "outline_y_lateral": {
+    "comment": "lateral (positive-Y) feather edge; curved, 5th-met bulge slightly behind the medial joint",
+    "points": [
+      [0.0, 0.0], [0.01, 8.0], [0.03, 16.0], [0.07, 25.0], [0.12, 30.5],
+      [0.17, 32.0], [0.28, 31.0], [0.40, 30.0], [0.52, 32.0], [0.62, 37.5],
+      [0.72, 52.5], [0.78, 52.3], [0.84, 47.0], [0.90, 38.5],
+      [0.95, 27.0], [0.98, 16.0], [1.0, 0.0]
+    ]
+  },
+  "top_profile_z": {
+    "comment": "crown height along the length: back curve top -> cone peak (thimble region) -> instep -> falls over ball/toe box to the tip",
+    "points": [
+      [0.0, 38.0], [0.02, 50.0], [0.06, 68.0], [0.12, 82.0], [0.22, 95.0],
+      [0.30, 100.0], [0.40, 96.0], [0.52, 88.0], [0.58, 82.0], [0.62, 75.0],
+      [0.67, 61.0], [0.72, 47.0], [0.80, 36.5], [0.88, 30.0], [0.95, 25.0],
+      [1.0, 17.0]
+    ]
+  },
+  "dome_power": {
+    "comment": "cos^p dome exponent per station: <1 fuller/squarer walls (heel, cone), >1 more tapered (toe box)",
+    "points": [
+      [0.0, 0.85], [0.15, 0.80], [0.35, 0.82], [0.52, 0.90], [0.65, 0.95],
+      [0.75, 1.00], [0.88, 1.10], [1.0, 1.20]
+    ]
+  },
+  "crown_shift_y": {
+    "comment": "medial (negative) crown offset: the cone leans slightly medial over the arch; corners unaffected",
+    "points": [
+      [0.0, 0.0], [0.25, -1.5], [0.45, -3.0], [0.62, -3.0], [0.75, -2.0],
+      [0.90, -1.0], [1.0, 0.0]
+    ]
+  },
+  "bottom_camber_mm": 0.8,
+  "mesh": {
+    "n_sections": 116,
+    "n_dome_points": 42,
+    "n_bottom_points": 14,
+    "end_clearance_mm": 0.6
+  },
+  "landmark_fractions": {
+    "ball": 0.72, "waist": 0.62, "instep": 0.52, "heel_width": 0.17,
+    "short_heel": 0.09, "cone_peak": 0.30
+  }
+}

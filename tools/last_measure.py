@@ -67,12 +67,17 @@ def tape_perimeter(mesh, origin, normal) -> float | None:
                                 axis=1).sum())
 
 
-def min_tape_girth(mesh, pivot, sweep_deg, n_angles=41):
+def min_tape_girth(mesh, pivot, sweep_deg, n_angles=41, min_z_extent=0.0):
     """Minimal snug-tape perimeter over plane tilts φ∈sweep about +Y through
-    `pivot`. Returns (girth_mm, best_angle_deg)."""
+    `pivot`. Returns (girth_mm, best_angle_deg). Sections whose vertical
+    extent is below `min_z_extent` are rejected (degenerate corner slivers
+    would otherwise win the minimization)."""
     best, best_phi = None, None
     for phi in np.linspace(sweep_deg[0], sweep_deg[1], n_angles):
         nrm = (np.cos(phi * DEG), 0.0, np.sin(phi * DEG))
+        pts = _section_points(mesh, pivot, nrm)
+        if pts is None or np.ptp(pts[:, 2]) < min_z_extent:
+            continue
         p = tape_perimeter(mesh, pivot, nrm)
         if p is not None and (best is None or p < best):
             best, best_phi = p, float(phi)
@@ -134,10 +139,15 @@ def extract_feather_line(mesh, dihedral_deg=50.0):
 # ---------------------------------------------------------------- main entry
 
 DEFAULT_SWEEPS = {  # degrees; documented convention, override via `stations`
-    "ball": (-25.0, 25.0),
-    "waist": (-20.0, 20.0),
+    # normal(φ)=(cosφ,0,sinφ): φ<0 leans the plane's top FORWARD (toward toe),
+    # φ>0 leans it back toward the heel.
+    "ball": (-30.0, 25.0),
+    # waist is a defined near-vertical station measure, not a settling tape
+    "waist": (-8.0, 8.0),
     "instep": (0.0, 45.0),
-    "short_heel": (30.0, 70.0),
+    # short heel: tape from under the REAR of the heel seat up-forward over
+    # the cone top (the last's stand-in for the foot's ankle-bend loop)
+    "short_heel": (-52.0, -32.0),
 }
 
 
@@ -147,7 +157,8 @@ def measure_last(mesh: trimesh.Trimesh, landmarks: dict,
     feather outline; `stations` overrides fractions/sweeps."""
     st = {
         "ball_fraction": 0.72, "waist_fraction": 0.62, "instep_fraction": 0.52,
-        "heel_width_fraction": 0.17, "short_heel_fraction": 0.09,
+        "heel_width_fraction": 0.17, "short_heel_fraction": 0.04,
+        "heel_height_fraction": 0.09,
         "sweeps": DEFAULT_SWEEPS,
     }
     st.update(stations or {})
@@ -162,15 +173,30 @@ def measure_last(mesh: trimesh.Trimesh, landmarks: dict,
     def station_x(frac):
         return x0 + frac * stick
 
+    height = float(np.ptp(mesh.bounds[:, 2]))
     girths, angles = {}, {}
     for name, frac in [("ball", st["ball_fraction"]),
                        ("waist", st["waist_fraction"]),
-                       ("instep", st["instep_fraction"]),
-                       ("short_heel", st["short_heel_fraction"])]:
+                       ("instep", st["instep_fraction"])]:
         x = station_x(frac)
         pivot = (x, 0.0, bottom_z(x))
         g, phi = min_tape_girth(mesh, pivot, st["sweeps"][name])
         girths[name], angles[name] = g, phi
+
+    # short heel: DEFINED measure (like waist, not a settling tape) — the
+    # plane passes through the rear heel-seat pivot AND the instep crown
+    # point (front of the cone at the instep station). A minimized tape
+    # would slide to the shorter cone-peak plane, which is not the
+    # lastmaker's short-heel loop.
+    xp = station_x(st["short_heel_fraction"])
+    pivot = np.array([xp, 0.0, bottom_z(xp)])
+    xi = station_x(st["instep_fraction"])
+    sec_i = _section_points(mesh, (xi, 0, 0), (1, 0, 0))
+    crown_z = float(sec_i[:, 2].max()) if sec_i is not None else height
+    base_phi = -np.degrees(np.arctan2(xi - pivot[0], crown_z - pivot[2]))
+    g, phi = min_tape_girth(mesh, pivot, (base_phi - 3, base_phi + 3),
+                            n_angles=7, min_z_extent=0.6 * height)
+    girths["short_heel"], angles["short_heel"] = g, phi
 
     feather = np.asarray(landmarks["feather_outline_xy"]) \
         if "feather_outline_xy" in landmarks else None
@@ -179,9 +205,11 @@ def measure_last(mesh: trimesh.Trimesh, landmarks: dict,
     seat_w = outline_width_at(feather, station_x(st["heel_width_fraction"])) \
         if feather is not None else None
 
-    heel_h = prof[prof[:, 0] <= x0 + 0.10 * stick][:, 1].max()
+    # heel height convention: bottom-profile z at the heel-seat point
+    # (~0.09 of stick) — documented choice
+    heel_h = bottom_z(station_x(st["heel_height_fraction"]))
     toe_spring = float(prof[-1][1])
-    toe_line_x = landmarks.get("toe_line_x", x0 + 0.94 * stick)
+    toe_line_x = landmarks.get("toe_line_x") or (x0 + 0.94 * stick)
     sec = _section_points(mesh, (toe_line_x, 0, 0), (1, 0, 0))
     toe_box_h = float(np.ptp(sec[:, 2])) if sec is not None else None
 

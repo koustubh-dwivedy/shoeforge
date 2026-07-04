@@ -1,9 +1,33 @@
 # STATUS — derby-plain-uk9
 
-**Current stage:** 2 (Last generation) — IN PROGRESS (measurement engine, then template → GATE 2a)
-**Next gate:** [GATE 2a] template-last silhouette review
+**Current stage:** 2 (Last generation) — template built, **holding at [GATE 2a]**
+**Next:** on approval → S2.3 morph + S2.4 validation loop → GATE 2b (fit report)
 
 ## Stage log
+
+### Stage 2 (part 1) — measurement engine + base template (2026-07-04) — GATE 2a PENDING
+- `tools/last_measure.py`: snug-tape metrology (convex-hull planar sections,
+  min-tape sweeps; waist and short-heel are DEFINED near-fixed-plane measures —
+  conventions documented in the module docstring). Ground-truth tests vs analytic
+  solids: ALL PASS at ≤0.015% error (`tools/tests/test_last_measure.py`).
+- `tools/template_last_builder.py` + `data/templates/lasts/round_25mm/`:
+  in-house round-toe template, RIGHT last, built natively at 25 mm pitch,
+  UK 9 F dimensions. Watertight, 18k faces, feather edge a true hard crease.
+  7 build iterations (girth tuning, vamp-break softening, waist→joint outline
+  smoothing, toe blunting).
+- Measurements vs targets: stick/ball/waist/instep/tread/seat/heel-height/
+  toe-spring/toe-box ALL IN TOLERANCE. Short-heel reads 345.9 vs soft target
+  325 — see open issues.
+- Open issues:
+  1. Short-heel girth target (ratio-estimate 1.33×ball, flat foot) does not
+     model the 25 mm-pitch effect; measured 345.9 (1.41×ball) is plausible for
+     a pitched last. Flagged for physical calibration; NOT chased by loosening
+     tolerances (standing rule).
+  2. Aesthetic v1 limits (for human eyes at the gate): vamp-break descent is
+     pronounced; slight facet line at the joint in the top view; back curve
+     fairly upright; heel asymmetry mild.
+- **GATE 2a: awaiting human review of silhouettes**
+  (`data/templates/lasts/round_25mm/snapshots/` + `TEMPLATE_REPORT.md`).
 
 ### Stage 1 — Fit targets (2026-07-04) — COMPLETE (no gate)
 - Artifacts: `data/sizing/uk_men.json`, `data/allowances/fit.json` (repo-level configs),
