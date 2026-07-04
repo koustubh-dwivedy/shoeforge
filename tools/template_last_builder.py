@@ -44,6 +44,11 @@ def build_mesh(p: dict) -> tuple[trimesh.Trimesh, dict]:
     yl = spline(p["outline_y_lateral"]["points"])
     dp = spline(p["dome_power"]["points"])
     cs = spline(p["crown_shift_y"]["points"])
+    zero = lambda f: 0.0
+    cl = spline(p["centerline_shift_y"]["points"]) \
+        if "centerline_shift_y" in p else zero      # toe swing / inflare
+    da = spline(p["dome_asym"]["points"]) \
+        if "dome_asym" in p else zero               # quadrant wall bias
 
     m = p["mesh"]
     nsec, nd, nb = m["n_sections"], m["n_dome_points"], m["n_bottom_points"]
@@ -54,11 +59,12 @@ def build_mesh(p: dict) -> tuple[trimesh.Trimesh, dict]:
     rings = []
     for f in fracs:
         x = f * L
-        y_med, y_lat = float(ym(f)), float(yl(f))
+        swing = float(cl(f))
+        y_med, y_lat = float(ym(f)) + swing, float(yl(f)) + swing
         z_bot, z_top = float(zb(f)), float(zt(f))
         mid, half = 0.5 * (y_lat + y_med), 0.5 * (y_lat - y_med)
         h = max(z_top - z_bot, 0.8)
-        pw, shift = float(dp(f)), float(cs(f))
+        pw, shift, asym = float(dp(f)), float(cs(f)), float(da(f))
 
         # bottom edge: medial corner -> lateral corner (slight downward camber)
         ub = np.linspace(-1.0, 1.0, nb + 2)[1:-1]
@@ -66,10 +72,11 @@ def build_mesh(p: dict) -> tuple[trimesh.Trimesh, dict]:
         zbot_line = z_bot - camber * (1.0 - ub ** 2)
         bottom = np.column_stack([np.full(nb, x), yb, zbot_line])
 
-        # dome: lateral corner -> crown -> medial corner (u: +1 -> -1)
+        # dome: lateral corner -> crown -> medial corner (u: +1 -> -1);
+        # quadrant bias: per-side exponent (asym<0 = fuller lateral wall)
         ud = np.linspace(1.0, -1.0, nd + 2)
         yd = mid + half * np.sin(ud * np.pi / 2) + shift * np.cos(ud * np.pi / 2)
-        zd = z_bot + h * np.cos(ud * np.pi / 2) ** pw
+        zd = z_bot + h * np.cos(ud * np.pi / 2) ** (pw * (1.0 + asym * ud))
         dome = np.column_stack([np.full(nd + 2, x), yd, zd])
 
         rings.append(np.vstack([bottom, dome[1:-1]]))  # corners live in `bottom`? no:
@@ -83,8 +90,8 @@ def build_mesh(p: dict) -> tuple[trimesh.Trimesh, dict]:
     verts = rings.reshape(-1, 3)
 
     # heel / toe tip vertices close the ends
-    heel_tip = np.array([0.0, 0.0, 0.5 * (float(zb(0)) + float(zt(0)))])
-    toe_tip = np.array([L, 0.5 * (float(ym(1)) + float(yl(1))),
+    heel_tip = np.array([0.0, float(cl(0)), 0.5 * (float(zb(0)) + float(zt(0)))])
+    toe_tip = np.array([L, 0.5 * (float(ym(1)) + float(yl(1))) + float(cl(1)),
                         0.5 * (float(zb(1)) + float(zt(1)))])
     verts = np.vstack([verts, heel_tip, toe_tip])
     i_heel, i_toe = len(verts) - 2, len(verts) - 1
@@ -105,20 +112,25 @@ def build_mesh(p: dict) -> tuple[trimesh.Trimesh, dict]:
     mesh = trimesh.Trimesh(vertices=verts, faces=np.asarray(faces), process=True)
     trimesh.repair.fix_normals(mesh)
 
-    # feather outline polygon (forward along medial, back along lateral)
+    # feather outline polygon (forward along medial, back along lateral),
+    # including the centerline swing
     ff = np.linspace(eps, 1 - eps, 160)
+    swing_ff = np.array([float(cl(t)) for t in ff])
     outline = np.vstack([
-        np.column_stack([ff * L, ym(ff)]),
-        np.column_stack([ff[::-1] * L, yl(ff[::-1])]),
+        np.column_stack([ff * L, ym(ff) + swing_ff]),
+        np.column_stack([ff[::-1] * L, yl(ff[::-1]) + swing_ff[::-1]]),
     ])
     lm_fr = p["landmark_fractions"]
     landmarks = {
-        "heel_point": [0.0, 0.0, float(zb(0))],
+        "heel_point": [0.0, float(cl(0)), float(zb(0))],
         "toe_point": [L, float(toe_tip[1]), float(zb(1))],
         "stick_length_mm": L,
+        "functional_length_mm": p.get("functional_length_mm"),
         "feather_outline_xy": outline.round(3).tolist(),
-        "toe_line_x": None,   # design-specific; filled by the design pipeline
+        "toe_line_x": p.get("functional_length_mm"),  # toe tips of the mapped foot
         "station_fractions": lm_fr,
+        "feather_edge": p.get("feather_edge", "hard_90"),
+        "bottom_style": p.get("bottom_style", "flat_cambered"),
         "axes_note": "X heel->toe, Y lateral+ (right last), Z up; ground z=0",
     }
     return mesh, landmarks
@@ -147,8 +159,8 @@ def snapshots(mesh, p, outdir: Path):
     # cross-section plates at the landmark stations
     L = p["stick_length_mm"]
     fig, axes = plt.subplots(1, 4, figsize=(14, 4), dpi=130)
-    for ax, (name, fr) in zip(axes, [("seat 0.17", 0.17), ("instep 0.52", 0.52),
-                                     ("waist 0.62", 0.62), ("ball 0.72", 0.72)]):
+    for ax, (name, fr) in zip(axes, [("seat 0.17", 0.17), ("instep 0.48", 0.48),
+                                     ("waist 0.55", 0.55), ("ball line 0.63", 0.63)]):
         sec = mesh.section(plane_origin=(fr * L, 0, 0), plane_normal=(1, 0, 0))
         for seg in sec.discrete:
             s = np.asarray(seg)

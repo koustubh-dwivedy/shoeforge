@@ -77,14 +77,27 @@
     }
   },
   "stations": {
-    "comment": "Measurement station positions as fractions of stick length from heel; plane tilts defined in tools/last_measure.py.",
-    "ball_fraction": { "default": 0.72, "min": 0.72, "max": 0.74,
-      "rationale": "WORKFLOW §S1.3: ball line at ~72-74% of stick length from heel" },
-    "instep_fraction": { "default": 0.52, "min": 0.48, "max": 0.58,
-      "rationale": "instep station over the cone rise — convention documented in last_measure.py" },
-    "waist_fraction": { "default": 0.62, "min": 0.58, "max": 0.66,
-      "rationale": "waist station between instep and ball" },
+    "comment": "Joint/instep anchors are fractions of FOOT length (anatomical); tools/fit_targets.py converts to stick fractions. Other stations are stick fractions. DECISION 2026-07-04 (see data/templates/lasts/DECISIONS.md): joint-anchored OBLIQUE ball line per last_params.md (US patent 7,770,306; Koleff) replaces the earlier 0.72-of-stick vertical station — the earlier convention measured ~15 mm too far forward.",
+    "medial_joint_foot_fraction": { "default": 0.69, "min": 0.67, "max": 0.71,
+      "rationale": "1st MPJ at ~69% of foot length (US 7,770,306 via last_params.md)" },
+    "lateral_joint_foot_fraction": { "default": 0.63, "min": 0.61, "max": 0.65,
+      "rationale": "5th MPJ at ~63% of foot length (US 7,770,306)" },
+    "ball_line_point_fraction_across": { "default": 0.41,
+      "rationale": "ball-line point at ~41% across from the 1st joint (3DShoemaker foot tracing)" },
+    "instep_foot_fraction": { "default": 0.50, "min": 0.46, "max": 0.54,
+      "rationale": "instep point = middle-cuneiform prominence ≈ mid foot (last_params.md §B)" },
+    "waist_rule": "midway between the instep plane and the ball-line midpoint (last_params.md §D)",
     "heel_width_fraction": { "default": 0.17, "min": 0.14, "max": 0.20,
-      "rationale": "seat width station at ~1/6 of length from heel (last_creation.md §6)" }
+      "rationale": "seat width station at ~1/6 of length from heel (last_creation.md §6)" },
+    "short_heel_pivot_fraction": { "default": 0.04,
+      "rationale": "rear heel-seat pivot for heel-girth loops" },
+    "heel_height_fraction": { "default": 0.09,
+      "rationale": "heel-seat point where heel height is read" }
+  },
+  "cross_check_cheaney_125": {
+    "comment": "Real Northampton GYW maker anchor (Joseph Cheaney '125' last, via last_params.md §J): UK 8 F = 290 mm internal length / 245 mm joint girth; UK 9 F = 298 / 251 (+8 mm, +6 mm per size; F→G = +6 mm). OPEN CALIBRATION ITEM: Cheaney runs ~+10 mm length and ~+6 mm joint girth vs our barleycorn/dress-snug targets (287.6 / 245.4 at UK 9 F). Our defaults stand (WORKFLOW authority, snug dress fit) until the physical calibration run; re-anchoring to Cheaney is a one-line config change here.",
+    "table_uk_f": { "8": { "internal_length_mm": 290, "joint_girth_mm": 245 },
+                     "9": { "internal_length_mm": 298, "joint_girth_mm": 251 } },
+    "girth_step_per_fitting_mm": 6.0
   }
 }

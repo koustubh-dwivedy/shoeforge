@@ -48,8 +48,26 @@
   overlay; gap now mostly within sole-overhang uncertainty. All fit-critical
   measurements remain IN TOLERANCE (ball 244.1, waist 240.7, instep 257.5,
   tread 98.5, seat 63.0, heel 24.2, spring 9.5, toe-box 18.0).
-- **GATE 2a (round 3): awaiting human review** — template_view.blend (3D),
-  snapshots/, reference/overlay.png, TEMPLATE_REPORT.md.
+- Round 4 (v14-v16), user directives: (1) parameter audit vs last_params.md —
+  registry in `data/templates/lasts/DECISIONS.md`; implemented: joint-anchored
+  OBLIQUE ball line (medial 0.69/lateral 0.63 of foot; replaces 0.72-of-stick),
+  re-derived stations (instep 0.4755, waist 0.5516 of stick), long-heel girth
+  (report-only), toe flare/inflare (`centerline_shift_y`), quadrant wall bias
+  (`dome_asym`), functional length + toe extension, insert depth, decomposed
+  girth allowances, Cheaney 125 cross-anchor (OPEN ITEM), extra reported
+  measures (waist/backpart width, heel pitch, wedge angle, cone peak).
+  Short-heel immediately improved 347→329 vs 325 estimate. (2) LSQ style-zone
+  fit implemented (`tools/lsq_fit.py`) and run: RMS ref-gap 9.9→3.0 mm; ref
+  sole handedness determined from joint anatomy (no mirror); side-view datum
+  fitted as nuisance scalar; post-fit girth re-validation caught+fixed a ball
+  overread (vamp-break hollow); fit/style junction faired. (3) Master file:
+  `data/templates/lasts/DECISIONS.md`.
+- Fit-critical after LSQ (v16): ball 245.1 ✓, waist 241.5 ✓, instep 256.7 ✓,
+  tread 98.8 ✓, seat 63.0 ✓, heel 24.2 ✓, spring 10.0 ✓, toe-box 24.6 ✓,
+  short-heel 329.0 (estimate 325, Δ+4 — calibration item).
+- **GATE 2a (round 4): awaiting human review** — template_view.blend,
+  mock/mock_view.blend, snapshots/, reference/overlay.png, LSQ_REPORT.md,
+  TEMPLATE_REPORT.md.
 
 ### Stage 1 — Fit targets (2026-07-04) — COMPLETE (no gate)
 - Artifacts: `data/sizing/uk_men.json`, `data/allowances/fit.json` (repo-level configs),

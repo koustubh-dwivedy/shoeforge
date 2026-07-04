@@ -1,60 +1,431 @@
 {
   "meta": {
     "template": "round_25mm",
-    "description": "In-house round-toe men's dress last template, RIGHT foot, built natively at 25 mm heel pitch. First entry in the shoeforge template library. All values mm; x-positions are fractions of stick length (heel=0, toe=1).",
+    "description": "In-house round-toe men's dress last template, RIGHT foot, built natively at 25 mm heel pitch. First entry in the shoeforge template library. All values mm; x-positions are fractions of stick length (heel=0, toe=1). Parameter registry & decisions: data/templates/lasts/DECISIONS.md.",
     "built_at": "UK 9 F dimensions (morph corrections expected to be small)",
+    "revision": "v14 joint-anchored ball line per last_params.md (2026-07-04) + LSQ-fitted style zone",
     "created": "2026-07-04"
   },
   "stick_length_mm": 287.6,
+  "functional_length_mm": 273.5,
   "heel_height_mm": 25.0,
   "toe_spring_mm": 10.0,
+  "feather_edge": "hard_90",
+  "bottom_style": "flat_cambered",
   "bottom_profile_z": {
-    "comment": "z of the feather/bottom along the length; ground plane z=0; tread touches near the ball",
+    "comment": "z of the feather/bottom along the length; ground plane z=0; tread touches near the joints",
     "points": [
-      [0.0, 26.0], [0.05, 25.5], [0.09, 25.0], [0.14, 24.2], [0.20, 22.0],
-      [0.30, 15.0], [0.45, 6.5], [0.55, 2.5], [0.65, 0.5], [0.72, 0.0],
-      [0.80, 0.3], [0.88, 2.2], [0.95, 6.0], [1.0, 10.0]
+      [
+        0.0,
+        26.0
+      ],
+      [
+        0.05,
+        25.5
+      ],
+      [
+        0.09,
+        25.0
+      ],
+      [
+        0.14,
+        24.2
+      ],
+      [
+        0.2,
+        22.0
+      ],
+      [
+        0.3,
+        15.0
+      ],
+      [
+        0.42,
+        7.5
+      ],
+      [
+        0.5,
+        4.0
+      ],
+      [
+        0.56,
+        2.0
+      ],
+      [
+        0.63,
+        0.5
+      ],
+      [
+        0.7,
+        0.0
+      ],
+      [
+        0.8,
+        0.6
+      ],
+      [
+        0.88,
+        2.5
+      ],
+      [
+        0.95,
+        6.0
+      ],
+      [
+        1.0,
+        10.0
+      ]
     ]
   },
   "outline_y_medial": {
-    "comment": "medial (negative-Y) feather edge; right last: medial edge relatively straight through the big-toe joint",
+    "comment": "medial (negative-Y) feather edge BEFORE centerline swing; 1st-MPJ joint peak at the medial joint station 0.656",
     "points": [
-      [0.0, 0.0], [0.01, -8.0], [0.03, -16.0], [0.07, -24.0], [0.12, -29.0],
-      [0.17, -31.0], [0.28, -31.5], [0.40, -32.5], [0.52, -34.5], [0.62, -38.5],
-      [0.70, -45.0], [0.74, -46.8], [0.80, -45.8], [0.86, -43.0], [0.90, -40.0],
-      [0.95, -33.5], [0.98, -23.0], [1.0, -4.0]
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.01,
+        -8.0
+      ],
+      [
+        0.03,
+        -16.0
+      ],
+      [
+        0.07,
+        -24.0
+      ],
+      [
+        0.12,
+        -29.0
+      ],
+      [
+        0.17,
+        -31.0
+      ],
+      [
+        0.28,
+        -31.5
+      ],
+      [
+        0.36,
+        -32.5
+      ],
+      [
+        0.44,
+        -34.5
+      ],
+      [
+        0.52,
+        -38.5
+      ],
+      [
+        0.6,
+        -44.5
+      ],
+      [
+        0.656,
+        -47.0
+      ],
+      [
+        0.72,
+        -43.0
+      ],
+      [
+        0.8,
+        -37.16251986851007
+      ],
+      [
+        0.86,
+        -32.23763001602262
+      ],
+      [
+        0.9,
+        -28.86012552130413
+      ],
+      [
+        0.95,
+        -21.290956886824624
+      ],
+      [
+        0.98,
+        -13.0
+      ],
+      [
+        1.0,
+        0.0
+      ]
     ]
   },
   "outline_y_lateral": {
-    "comment": "lateral (positive-Y) feather edge; curved, 5th-met bulge slightly behind the medial joint",
+    "comment": "lateral (positive-Y) feather edge BEFORE swing; 5th-MPJ joint peak at the lateral joint station 0.599 (posterior of the medial joint)",
     "points": [
-      [0.0, 0.0], [0.01, 8.0], [0.03, 16.0], [0.07, 25.0], [0.12, 30.5],
-      [0.17, 32.0], [0.28, 32.5], [0.40, 34.5], [0.52, 38.5], [0.62, 44.0],
-      [0.68, 51.0], [0.72, 52.3], [0.78, 51.2], [0.84, 48.0], [0.90, 42.0],
-      [0.95, 32.0], [0.98, 20.0], [1.0, -4.0]
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.01,
+        8.0
+      ],
+      [
+        0.03,
+        16.0
+      ],
+      [
+        0.07,
+        25.0
+      ],
+      [
+        0.12,
+        30.5
+      ],
+      [
+        0.17,
+        32.0
+      ],
+      [
+        0.26,
+        32.0
+      ],
+      [
+        0.34,
+        33.5
+      ],
+      [
+        0.42,
+        36.0
+      ],
+      [
+        0.5,
+        40.5
+      ],
+      [
+        0.56,
+        46.5
+      ],
+      [
+        0.599,
+        52.0
+      ],
+      [
+        0.66,
+        51.5
+      ],
+      [
+        0.74,
+        43.5
+      ],
+      [
+        0.82,
+        35.00347098175518
+      ],
+      [
+        0.88,
+        29.455647799425364
+      ],
+      [
+        0.93,
+        23.206874944408835
+      ],
+      [
+        0.97,
+        14.172189588319227
+      ],
+      [
+        1.0,
+        0.0
+      ]
+    ]
+  },
+  "centerline_shift_y": {
+    "comment": "toe swing / flare (last_params.md \u00a7G): negative = inflare (forepart swings medially, the standard 'banana'); applied to both outline edges and section centers",
+    "points": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.4,
+        0.0
+      ],
+      [
+        0.6,
+        -1.0
+      ],
+      [
+        0.75,
+        -0.5644884779821102
+      ],
+      [
+        0.9,
+        -1.1309463724652165
+      ],
+      [
+        1.0,
+        -5.0
+      ]
     ]
   },
   "top_profile_z": {
-    "comment": "crown height along the length: back curve top -> cone peak (thimble region) -> instep -> falls over ball/toe box to the tip",
+    "comment": "crown height along the length: back curve top -> cone peak (thimble region) -> instep (0.48) -> waist saddle (0.55) -> ball line (0.63) -> toe box",
     "points": [
-      [0.0, 38.0], [0.02, 50.0], [0.06, 68.0], [0.12, 82.0], [0.22, 95.0],
-      [0.30, 100.0], [0.40, 93.5], [0.52, 80.0], [0.58, 71.5], [0.62, 63.5],
-      [0.67, 52.0], [0.72, 47.0], [0.80, 35.5], [0.88, 28.0], [0.95, 21.5],
-      [1.0, 14.0]
+      [
+        0.0,
+        38.0
+      ],
+      [
+        0.02,
+        50.0
+      ],
+      [
+        0.06,
+        68.0
+      ],
+      [
+        0.12,
+        82.0
+      ],
+      [
+        0.22,
+        95.0
+      ],
+      [
+        0.3,
+        100.0
+      ],
+      [
+        0.4,
+        90.0
+      ],
+      [
+        0.48,
+        78.5
+      ],
+      [
+        0.55,
+        60.5
+      ],
+      [
+        0.63,
+        45.5
+      ],
+      [
+        0.72,
+        37.5
+      ],
+      [
+        0.8,
+        39.11400633655591
+      ],
+      [
+        0.88,
+        35.5491912348514
+      ],
+      [
+        0.95,
+        30.0
+      ],
+      [
+        1.0,
+        20.0
+      ]
     ]
   },
   "dome_power": {
     "comment": "cos^p dome exponent per station: <1 fuller/squarer walls (heel, cone), >1 more tapered (toe box)",
     "points": [
-      [0.0, 0.85], [0.15, 0.80], [0.35, 0.82], [0.52, 0.90], [0.65, 0.95],
-      [0.75, 1.00], [0.88, 1.10], [1.0, 1.20]
+      [
+        0.0,
+        0.85
+      ],
+      [
+        0.15,
+        0.8
+      ],
+      [
+        0.35,
+        0.85
+      ],
+      [
+        0.48,
+        0.9
+      ],
+      [
+        0.55,
+        0.95
+      ],
+      [
+        0.63,
+        1.0
+      ],
+      [
+        0.8,
+        1.1
+      ],
+      [
+        1.0,
+        1.2
+      ]
+    ]
+  },
+  "dome_asym": {
+    "comment": "quadrant wall bias (last_params.md \u00a7H): per-side dome-exponent skew; negative = fuller LATERAL wall, straighter medial wall",
+    "points": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.35,
+        -0.03
+      ],
+      [
+        0.55,
+        -0.06
+      ],
+      [
+        0.75,
+        -0.05
+      ],
+      [
+        1.0,
+        0.0
+      ]
     ]
   },
   "crown_shift_y": {
     "comment": "medial (negative) crown offset: the cone leans slightly medial over the arch; corners unaffected",
     "points": [
-      [0.0, 0.0], [0.25, -1.5], [0.45, -3.0], [0.62, -3.0], [0.75, -2.0],
-      [0.90, -1.0], [1.0, 0.0]
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.25,
+        -1.5
+      ],
+      [
+        0.42,
+        -3.0
+      ],
+      [
+        0.55,
+        -3.0
+      ],
+      [
+        0.7,
+        -2.0
+      ],
+      [
+        0.9,
+        -1.0
+      ],
+      [
+        1.0,
+        0.0
+      ]
     ]
   },
   "bottom_camber_mm": 0.8,
@@ -65,7 +436,13 @@
     "end_clearance_mm": 0.6
   },
   "landmark_fractions": {
-    "ball": 0.72, "waist": 0.62, "instep": 0.52, "heel_width": 0.17,
-    "short_heel": 0.09, "cone_peak": 0.30
+    "medial_joint_fraction": 0.6562,
+    "lateral_joint_fraction": 0.5991,
+    "instep_fraction": 0.4755,
+    "waist_fraction": 0.5516,
+    "heel_width_fraction": 0.17,
+    "short_heel_pivot_fraction": 0.04,
+    "heel_height_fraction": 0.09,
+    "cone_peak_fraction": 0.3
   }
 }

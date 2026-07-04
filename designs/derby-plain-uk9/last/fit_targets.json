@@ -26,29 +26,50 @@
     "heel_width_mm": 66.0,
     "tread_width_mm": 99.0
   },
+  "stations": {
+    "comment": "joint-anchored oblique ball line (DECISIONS.md); fractions are of stick unless noted",
+    "medial_joint_x_mm": 188.7,
+    "lateral_joint_x_mm": 172.3,
+    "medial_joint_fraction": 0.6562,
+    "lateral_joint_fraction": 0.5991,
+    "instep_fraction": 0.4755,
+    "waist_fraction": 0.5516,
+    "heel_width_fraction": 0.17,
+    "short_heel_pivot_fraction": 0.04,
+    "heel_height_fraction": 0.09
+  },
   "targets": {
     "stick_length_mm": {
       "target": 287.6,
       "tol": 1.5
     },
+    "functional_length_mm": {
+      "target": 273.5,
+      "tol": 1.5,
+      "note": "foot-mapped length; toe extension is style zone"
+    },
     "ball_girth_mm": {
       "target": 245.4,
       "tol": 2.0,
-      "station_fraction": 0.72
+      "plane": "oblique through medial+lateral joints"
     },
     "instep_girth_mm": {
       "target": 256.9,
       "tol": 2.0,
-      "station_fraction": 0.52
+      "station_fraction": 0.4755
     },
     "waist_girth_mm": {
       "target": 241.4,
       "tol": 2.0,
-      "station_fraction": 0.62
+      "station_fraction": 0.5516
     },
     "short_heel_girth_mm": {
       "target": 325.0,
       "tol": 2.0
+    },
+    "long_heel_girth_mm": {
+      "target": null,
+      "note": "report-only (see allowances long_heel rationale)"
     },
     "seat_width_mm": {
       "target": 63.0,
@@ -58,7 +79,7 @@
     "tread_width_mm": {
       "target": 99.0,
       "tol": 1.0,
-      "station_fraction": 0.72
+      "note": "caliper across the joint line"
     },
     "toe_spring_mm": {
       "target": 10.0,
@@ -74,27 +95,28 @@
   "toe_allowance": {
     "nominal_mm": 17.0,
     "effective_mm": 14.1,
+    "toe_extension_mm": 14.1,
     "note": "effective = barleycorn stick - reference foot length; see FIT_TARGETS.md open note"
   },
   "zones": {
-    "ball_line_x_mm": 207.1,
+    "ball_line_x_mm": 180.5,
     "fit_zone": {
       "x_mm": [
         0.0,
-        215.7
+        197.3
       ],
       "rule": "hard tolerances; untouched by style operations (assert <0.2 mm displacement in Stage 2 style step)"
     },
     "toe_region": {
       "x_mm": [
-        215.7,
+        197.3,
         273.5
       ],
       "rule": "style shaping allowed but toe-box height >= 8.0 mm above insole plane over the toes"
     },
     "style_zone": {
       "x_mm": [
-        215.7,
+        197.3,
         287.6
       ],
       "rule": "free aesthetic shaping forward of fit zone, subject to toe_region rule"

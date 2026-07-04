@@ -89,9 +89,15 @@ def derive(design_dir: Path) -> dict:
 
     st = sizing["stations"]
     tol = allow["tolerances_mm"]
-    ball_x = st["ball_fraction"]["default"] * stick
-    fit_zone_x_max = round(ball_x + 0.03 * stick, 1)           # "just beyond the ball line"
-    toes_end_x = round(foot["foot_length_mm"], 1)              # toe tips of the reference foot
+    foot_len = foot["foot_length_mm"]
+    # joint-anchored oblique ball line (anatomical fractions of FOOT length)
+    x_med_joint = st["medial_joint_foot_fraction"]["default"] * foot_len
+    x_lat_joint = st["lateral_joint_foot_fraction"]["default"] * foot_len
+    ball_mid_x = 0.5 * (x_med_joint + x_lat_joint)
+    x_instep = st["instep_foot_fraction"]["default"] * foot_len
+    x_waist = 0.5 * (x_instep + ball_mid_x)                    # midway rule
+    fit_zone_x_max = round(x_med_joint + 0.03 * stick, 1)      # just beyond the 1st joint
+    toes_end_x = round(foot_len, 1)                            # toe tips of the reference foot
 
     r = lambda v: round(v, 1)
     return {
@@ -110,19 +116,35 @@ def derive(design_dir: Path) -> dict:
             "short_heel_girth_mm": r(foot_short_heel), "heel_width_mm": r(foot_heel_w),
             "tread_width_mm": r(foot_tread_w)
         },
+        "stations": {
+            "comment": "joint-anchored oblique ball line (DECISIONS.md); fractions are of stick unless noted",
+            "medial_joint_x_mm": r(x_med_joint),
+            "lateral_joint_x_mm": r(x_lat_joint),
+            "medial_joint_fraction": round(x_med_joint / stick, 4),
+            "lateral_joint_fraction": round(x_lat_joint / stick, 4),
+            "instep_fraction": round(x_instep / stick, 4),
+            "waist_fraction": round(x_waist / stick, 4),
+            "heel_width_fraction": st["heel_width_fraction"]["default"],
+            "short_heel_pivot_fraction": st["short_heel_pivot_fraction"]["default"],
+            "heel_height_fraction": st["heel_height_fraction"]["default"]
+        },
         "targets": {
             "stick_length_mm": {"target": r(stick), "tol": tol["lengths"]},
+            "functional_length_mm": {"target": r(foot_len), "tol": tol["lengths"],
+                                      "note": "foot-mapped length; toe extension is style zone"},
             "ball_girth_mm": {"target": r(last_ball), "tol": tol["girths"],
-                               "station_fraction": st["ball_fraction"]["default"]},
+                               "plane": "oblique through medial+lateral joints"},
             "instep_girth_mm": {"target": r(last_instep), "tol": tol["girths"],
-                                 "station_fraction": st["instep_fraction"]["default"]},
+                                 "station_fraction": round(x_instep / stick, 4)},
             "waist_girth_mm": {"target": r(last_waist), "tol": tol["girths"],
-                                "station_fraction": st["waist_fraction"]["default"]},
+                                "station_fraction": round(x_waist / stick, 4)},
             "short_heel_girth_mm": {"target": r(last_short_heel), "tol": tol["girths"]},
+            "long_heel_girth_mm": {"target": None,
+                                    "note": "report-only (see allowances long_heel rationale)"},
             "seat_width_mm": {"target": r(last_seat_w), "tol": tol["widths"],
                                "station_fraction": st["heel_width_fraction"]["default"]},
             "tread_width_mm": {"target": r(last_tread_w), "tol": tol["widths"],
-                                "station_fraction": st["ball_fraction"]["default"]},
+                                "note": "caliper across the joint line"},
             "toe_spring_mm": {"target": allow["toe_spring_mm"]["by_sole"][sole_key]["default"],
                                "min": allow["toe_spring_mm"]["by_sole"][sole_key]["min"],
                                "max": allow["toe_spring_mm"]["by_sole"][sole_key]["max"]},
@@ -132,10 +154,11 @@ def derive(design_dir: Path) -> dict:
         "toe_allowance": {
             "nominal_mm": toe_allow,
             "effective_mm": effective_toe_allow,
+            "toe_extension_mm": effective_toe_allow,
             "note": "effective = barleycorn stick - reference foot length; see FIT_TARGETS.md open note"
         },
         "zones": {
-            "ball_line_x_mm": r(ball_x),
+            "ball_line_x_mm": r(ball_mid_x),
             "fit_zone": {"x_mm": [0.0, fit_zone_x_max],
                           "rule": "hard tolerances; untouched by style operations (assert <0.2 mm displacement in Stage 2 style step)"},
             "toe_region": {"x_mm": [fit_zone_x_max, toes_end_x],

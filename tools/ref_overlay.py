@@ -73,7 +73,10 @@ def sole_outline_mm(img_path, stick_mm):
     poly = arr @ rot.T
     shrunk = Polygon(poly).buffer(-SOLE_OVERHANG_MM).simplify(0.4)
     xy = np.asarray(shrunk.exterior.coords)
-    xy[:, 1] *= -1.0   # ref_top shows a LEFT sole; mirror to right-last frame
+    # handedness (verified against joint anatomy): the photographed sole is a
+    # LEFT shoe sole-up, which already reads right-handed — no mirror. The
+    # un-mirrored outline puts the anterior joint bulge on the medial side,
+    # matching a right last (medial 1st MPJ anterior of lateral 5th).
     # re-scale length to stick and re-anchor heel at 0
     xy[:, 0] -= xy[:, 0].min()
     xy[:, 0] *= stick_mm / xy[:, 0].max()

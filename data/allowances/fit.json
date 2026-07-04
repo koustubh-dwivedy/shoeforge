@@ -16,12 +16,15 @@
       "rationale": "elongated square/chisel reach 25-35 total (WORKFLOW); extra is style-zone only" }
   },
   "girth_allowances_mm": {
+    "decomposition_note": "Net allowances below decompose per last_params.md §J as: net = feather_edge_allowance (positive; sharp last edges vs rounded foot) + fill_up (instep only) + sock_stack + insert_depth - dress_snug_reduction. E.g. ball net -2 ≈ feather +2 (est) - snug -4. Components are documented for calibration; the NET values drive the pipeline.",
     "ball": { "default": -2.0, "min": -5.0, "max": 0.0,
       "rationale": "dress fit: last ball girth ≈ foot +0 to -5; leather stretch absorbs snugness (WORKFLOW §S1.2)" },
     "instep": { "default": 1.5, "min": 0.0, "max": 3.0,
       "rationale": "instep hold without pressure (WORKFLOW §S1.2)" },
     "short_heel": { "default": -4.0, "min": -6.0, "max": -3.0,
       "rationale": "heel grip is negative allowance (WORKFLOW §S1.2)" },
+    "long_heel": { "default": null,
+      "rationale": "REPORT-ONLY: published relation long = short + 40-46 mm (Koleff, via last_params.md) describes the foot's ankle loop, which a cone-truncated pitched last cannot reproduce as a planar tape; measured and reported for calibration, no hard target." },
     "waist_mode": { "default": "proportional_to_ball",
       "beveled_option_mm": -3.0,
       "rationale": "waist scales with ball; -3 option for beveled-waist aesthetic (not used for derby-plain-uk9)" }
@@ -49,6 +52,8 @@
     "widths": 1.0,
     "rationale": "SATRA-informed defaults (WORKFLOW §S1.3); changed only by human edit"
   },
+  "insert_depth_mm": { "default": 0.5, "min": 0.5, "max": 3.0,
+    "rationale": "last bottom drop for sock lining (0.5 standard, 3DShoemaker verbatim via last_params.md §G); up to 3 for orthotics. Applied as girth headroom in bespoke mode; standard table feet already assume a sock lining." },
   "sock_stack_mm": {
     "default_scenario": "dress_sock",
     "values": { "nylon": 0.5, "dress_sock": 1.0, "casual_sock": 1.5, "sport_sock": 2.0, "wool": 3.0, "sock_lining": 0.5 },
