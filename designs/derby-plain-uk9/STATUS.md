@@ -18,16 +18,24 @@
 - Measurements vs targets: stick/ball/waist/instep/tread/seat/heel-height/
   toe-spring/toe-box ALL IN TOLERANCE. Short-heel reads 345.9 vs soft target
   325 — see open issues.
+- GATE 2a round 1 feedback (2026-07-04): top view "looks like a duck"; user
+  wants 3D review; user supplied ref_top.jpg / ref_side.jpg (stored in
+  `data/templates/lasts/round_25mm/reference/` — used per the workflow's
+  classification-not-reconstruction philosophy, here as qualitative
+  silhouette references).
+- Round 2 (v11): midfoot widths raised so width builds continuously heel→ball
+  (arch ~75-80% of ball width, lateral edge one convex sweep — matched to
+  ref_top); crowns lowered to hold girths (wide/low arch saddle); forepart
+  keeps width longer; vamp break smoother. All primary girths remain IN
+  TOLERANCE. New: `template_view.blend` (open in Blender to orbit in 3D;
+  generated each build by `tools/make_viewer_blend.py`; ground plane = z0).
 - Open issues:
   1. Short-heel girth target (ratio-estimate 1.33×ball, flat foot) does not
-     model the 25 mm-pitch effect; measured 345.9 (1.41×ball) is plausible for
+     model the 25 mm-pitch effect; measured 347.7 (1.42×ball) is plausible for
      a pitched last. Flagged for physical calibration; NOT chased by loosening
      tolerances (standing rule).
-  2. Aesthetic v1 limits (for human eyes at the gate): vamp-break descent is
-     pronounced; slight facet line at the joint in the top view; back curve
-     fairly upright; heel asymmetry mild.
-- **GATE 2a: awaiting human review of silhouettes**
-  (`data/templates/lasts/round_25mm/snapshots/` + `TEMPLATE_REPORT.md`).
+- **GATE 2a (round 2): awaiting human review** — snapshots + TEMPLATE_REPORT.md
+  + template_view.blend in `data/templates/lasts/round_25mm/`.
 
 ### Stage 1 — Fit targets (2026-07-04) — COMPLETE (no gate)
 - Artifacts: `data/sizing/uk_men.json`, `data/allowances/fit.json` (repo-level configs),

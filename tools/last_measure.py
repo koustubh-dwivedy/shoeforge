@@ -195,7 +195,7 @@ def measure_last(mesh: trimesh.Trimesh, landmarks: dict,
     crown_z = float(sec_i[:, 2].max()) if sec_i is not None else height
     base_phi = -np.degrees(np.arctan2(xi - pivot[0], crown_z - pivot[2]))
     g, phi = min_tape_girth(mesh, pivot, (base_phi - 3, base_phi + 3),
-                            n_angles=7, min_z_extent=0.6 * height)
+                            n_angles=7, min_z_extent=0.45 * height)
     girths["short_heel"], angles["short_heel"] = g, phi
 
     feather = np.asarray(landmarks["feather_outline_xy"]) \
@@ -213,12 +213,13 @@ def measure_last(mesh: trimesh.Trimesh, landmarks: dict,
     sec = _section_points(mesh, (toe_line_x, 0, 0), (1, 0, 0))
     toe_box_h = float(np.ptp(sec[:, 2])) if sec is not None else None
 
+    rnd = lambda v: round(v, 2) if v is not None else None
     return {
         "stick_length_mm": round(stick, 2),
-        "ball_girth_mm": round(girths["ball"], 2),
-        "waist_girth_mm": round(girths["waist"], 2),
-        "instep_girth_mm": round(girths["instep"], 2),
-        "short_heel_girth_mm": round(girths["short_heel"], 2),
+        "ball_girth_mm": rnd(girths["ball"]),
+        "waist_girth_mm": rnd(girths["waist"]),
+        "instep_girth_mm": rnd(girths["instep"]),
+        "short_heel_girth_mm": rnd(girths["short_heel"]),
         "tread_width_mm": round(tread_w, 2) if tread_w else None,
         "seat_width_mm": round(seat_w, 2) if seat_w else None,
         "heel_height_mm": round(float(heel_h), 2),
