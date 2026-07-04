@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "units": "mm",
+    "scope": "foot -> last allowances for GYW men's dress shoes, snug dress fit, calf leather (WORKFLOW §S1.2 is the authority of record).",
+    "caveat": "last_creation.md §6 notes free sources suggest ADDITIVE girth allowances (feather-edge + instep fill-up) rather than reductions; WORKFLOW's dress-fit defaults below stand until calibrated against a physical sample (that calibration run is expected and valuable).",
+    "created": "2026-07-04"
+  },
+  "toe_allowance_mm": {
+    "round": { "default": 17.0, "min": 15.0, "max": 18.0,
+      "rationale": "WORKFLOW: round 15-18; last_creation §6: 3DShoemaker builds ~17 longer than foot for round toes" },
+    "almond": { "default": 20.0, "min": 18.0, "max": 22.0, "rationale": "WORKFLOW §S1.2" },
+    "soft_chisel": { "default": 22.0, "min": 20.0, "max": 25.0, "rationale": "WORKFLOW §S1.2 (chisel band)" },
+    "chisel": { "default": 22.5, "min": 20.0, "max": 25.0, "rationale": "WORKFLOW §S1.2" },
+    "square": { "default": 22.0, "min": 20.0, "max": 25.0, "rationale": "square treated in the chisel band unless elongated" },
+    "elongated_extra": { "default": 8.0, "min": 3.0, "max": 12.0,
+      "rationale": "elongated square/chisel reach 25-35 total (WORKFLOW); extra is style-zone only" }
+  },
+  "girth_allowances_mm": {
+    "ball": { "default": -2.0, "min": -5.0, "max": 0.0,
+      "rationale": "dress fit: last ball girth ≈ foot +0 to -5; leather stretch absorbs snugness (WORKFLOW §S1.2)" },
+    "instep": { "default": 1.5, "min": 0.0, "max": 3.0,
+      "rationale": "instep hold without pressure (WORKFLOW §S1.2)" },
+    "short_heel": { "default": -4.0, "min": -6.0, "max": -3.0,
+      "rationale": "heel grip is negative allowance (WORKFLOW §S1.2)" },
+    "waist_mode": { "default": "proportional_to_ball",
+      "beveled_option_mm": -3.0,
+      "rationale": "waist scales with ball; -3 option for beveled-waist aesthetic (not used for derby-plain-uk9)" }
+  },
+  "width_allowances_mm": {
+    "seat_width": { "default": -3.0, "min": -4.0, "max": -2.0,
+      "rationale": "seat width = foot heel width -2 to -4 (WORKFLOW §S1.2)" },
+    "tread_width": { "default": 0.0, "min": -1.0, "max": 1.0,
+      "rationale": "last tread width ≈ foot tread width at F fitting; fitting steps handled in sizing table" }
+  },
+  "toe_spring_mm": {
+    "rule": "sole-thickness-linked (WORKFLOW §S1.3): stiffer/thicker sole -> more spring",
+    "by_sole": {
+      "single_leather_5mm": { "default": 10.0, "min": 8.0, "max": 12.0,
+        "rationale": "WORKFLOW: 8-12 mm for 5 mm leather sole" },
+      "double_leather_9mm": { "default": 13.0, "min": 11.0, "max": 15.0,
+        "rationale": "extrapolated; flag as estimate if used" }
+    }
+  },
+  "toe_box_min_height_mm": { "default": 8.0, "min": 8.0, "max": 12.0,
+    "rationale": "minimum toe-box height above toe tips at the toe line (WORKFLOW §S1.4 hard floor)" },
+  "tolerances_mm": {
+    "girths": 2.0,
+    "lengths": 1.5,
+    "widths": 1.0,
+    "rationale": "SATRA-informed defaults (WORKFLOW §S1.3); changed only by human edit"
+  },
+  "sock_stack_mm": {
+    "default_scenario": "dress_sock",
+    "values": { "nylon": 0.5, "dress_sock": 1.0, "casual_sock": 1.5, "sport_sock": 2.0, "wool": 3.0, "sock_lining": 0.5 },
+    "application": { "default": 0.0,
+      "rationale": "reference foot table already reflects socked dress fit per WORKFLOW anchor; stack applied only for bespoke measured feet (last_creation §6)" }
+  }
+}

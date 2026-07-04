@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "design": "derby-plain-uk9",
+    "units": "mm",
+    "derived_from": [
+      "spec/design_spec.json",
+      "data/sizing/uk_men.json",
+      "data/allowances/fit.json"
+    ],
+    "created": "2026-07-04",
+    "estimate_flag": "instep/waist/short-heel/width foot values are grade-derived ESTIMATES pending calibration (see data/sizing/uk_men.json secondary_estimates)"
+  },
+  "input": {
+    "uk_size": 9,
+    "width_fitting": "F",
+    "toe_character": "round",
+    "heel_height_mm": 25,
+    "sole": "single_leather_5mm"
+  },
+  "reference_foot": {
+    "foot_length_mm": 273.5,
+    "ball_girth_mm": 247.4,
+    "instep_girth_mm": 255.4,
+    "waist_girth_mm": 243.4,
+    "short_heel_girth_mm": 329.0,
+    "heel_width_mm": 66.0,
+    "tread_width_mm": 99.0
+  },
+  "targets": {
+    "stick_length_mm": {
+      "target": 287.6,
+      "tol": 1.5
+    },
+    "ball_girth_mm": {
+      "target": 245.4,
+      "tol": 2.0,
+      "station_fraction": 0.72
+    },
+    "instep_girth_mm": {
+      "target": 256.9,
+      "tol": 2.0,
+      "station_fraction": 0.52
+    },
+    "waist_girth_mm": {
+      "target": 241.4,
+      "tol": 2.0,
+      "station_fraction": 0.62
+    },
+    "short_heel_girth_mm": {
+      "target": 325.0,
+      "tol": 2.0
+    },
+    "seat_width_mm": {
+      "target": 63.0,
+      "tol": 1.0,
+      "station_fraction": 0.17
+    },
+    "tread_width_mm": {
+      "target": 99.0,
+      "tol": 1.0,
+      "station_fraction": 0.72
+    },
+    "toe_spring_mm": {
+      "target": 10.0,
+      "min": 8.0,
+      "max": 12.0
+    },
+    "heel_height_mm": {
+      "target": 25,
+      "tol": 1.5
+    },
+    "toe_box_min_height_mm": 8.0
+  },
+  "toe_allowance": {
+    "nominal_mm": 17.0,
+    "effective_mm": 14.1,
+    "note": "effective = barleycorn stick - reference foot length; see FIT_TARGETS.md open note"
+  },
+  "zones": {
+    "ball_line_x_mm": 207.1,
+    "fit_zone": {
+      "x_mm": [
+        0.0,
+        215.7
+      ],
+      "rule": "hard tolerances; untouched by style operations (assert <0.2 mm displacement in Stage 2 style step)"
+    },
+    "toe_region": {
+      "x_mm": [
+        215.7,
+        273.5
+      ],
+      "rule": "style shaping allowed but toe-box height >= 8.0 mm above insole plane over the toes"
+    },
+    "style_zone": {
+      "x_mm": [
+        215.7,
+        287.6
+      ],
+      "rule": "free aesthetic shaping forward of fit zone, subject to toe_region rule"
+    }
+  },
+  "feather_edge": {
+    "spec": "sharp hard crease on the DESIGN last (print copy may take a 0.4 mm micro-flat in Stage 3 only)"
+  }
+}
